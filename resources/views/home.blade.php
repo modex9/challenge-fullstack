@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <auth-header login-route="{{route('login')}}" register-route="{{route('register')}}" logout-route="{{route('logout')}}"></auth-header>
+    <auth-component login-route="{{route('login')}}" register-route="{{route('register')}}" logout-route="{{route('logout')}}"></auth-component>
 @endsection
