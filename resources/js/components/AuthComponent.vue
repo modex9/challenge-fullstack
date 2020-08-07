@@ -11,7 +11,7 @@
                 <a href="#" @click='logout()'>Logout</a>
             </div>
 
-            <login-form @loggedin="setUser"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
+            <login-form @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
             <register-form @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
         </div>
 </template>
@@ -53,8 +53,7 @@
                     if(data['success']) {
                         this.user = null;
                         this.csrf = data['csrf'];
-                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', this.csrf);
-
+                        this.updateTokenDOM();
                     }
                 })
                 .catch(error => console.log(error));
@@ -62,6 +61,13 @@
             setUser(user) {
                 this.user = user;
                 this.showRegForm = this.showLoginForm = false;
+            },
+            updateToken(token) {
+                this.csrf = token;
+                this.updateTokenDOM();
+            },
+            updateTokenDOM() {
+                document.querySelector('meta[name="csrf-token"]').setAttribute('content', this.csrf);
             }
         },
     }

@@ -97,7 +97,9 @@
                     if(!data['success'])
                         this.errors = data['errors'];
                     else {
+                        this.csrf = data['csrf'];
                         this.$emit('loggedin', data['user']);
+                        this.$emit('update-token', data['csrf'])
                     }
                 })
                 .catch(error => console.log(error));

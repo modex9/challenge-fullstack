@@ -65,7 +65,11 @@ class LoginController extends Controller
             return $response;
         }
 
-        return response()->json(array('success' => true, 'user' => $this->guard()->user()), 200);
+        return response()->json(array(
+            'success' => true,
+            'user' => $this->guard()->user(),
+            'csrf' => csrf_token(),
+            ), 200);
     }
 
     protected function validator(array $data)
