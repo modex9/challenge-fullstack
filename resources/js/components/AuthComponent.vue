@@ -8,12 +8,8 @@
 
             <div class="user-logged" v-if="user">
                 <p>{{welcomeMessage}}</p>
-            <a class="dropdown-item" :href="logoutRoute" @click='logout()'>Logout</a>
-                <form id="logout-form" :action="logoutRoute" method="POST" style="display: none;">
-                    <input type="hidden" name="_token" :value="csrf">
-                </form>
+                <a href="#" @click='logout()'>Logout</a>
             </div>
-            
 
             <login-form :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
             <register-form @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
@@ -45,8 +41,23 @@
         },
         methods : {
             logout() {
-                event.preventDefault();
-                document.getElementById('logout-form').submit();
+                fetch(this.logoutRoute, {
+                    method : 'POST',
+                    headers : {
+                        "Content-Type": "application/json; charset=utf-8",
+                        'X-CSRF-TOKEN' : this.csrf,
+                    },
+                })
+                .then(data => data.json())
+                .then(data => {
+                    if(data['success']) {
+                        this.user = null;
+                        this.csrf = data['csrf'];
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', this.csrf);
+
+                    }
+                })
+                .catch(error => console.log(error));
             },
             setUser(user) {
                 this.user = user;
