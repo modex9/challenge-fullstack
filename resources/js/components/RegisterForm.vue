@@ -13,13 +13,10 @@
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
 
                                 <div class="col-md-6">
-                                    <input v-model="name" id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="" required autocomplete="name" autofocus>
-
-                                    <!-- @error('name')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror -->
+                                    <input v-model="name" id="name" type="text" class="form-control" :class="{ 'is-invalid' : 'name' in errors}" name="name" value="" required autocomplete="name" autofocus>
+                                    <span v-if="errors['name']" class="invalid-feedback" role="alert">
+                                        <strong>{{ errors['name'][0] }}</strong>
+                                    </span>
                                 </div>
                             </div>
 
@@ -27,13 +24,10 @@
                                 <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
 
                                 <div class="col-md-6">
-                                    <input v-model="email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="" required autocomplete="email">
-
-                                    <!-- @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror -->
+                                    <input v-model="email" id="email" type="email" class="form-control" :class="{ 'is-invalid' : 'email' in errors}" name="email" value="" required autocomplete="email">
+                                    <span v-if="errors['email']" class="invalid-feedback" role="alert">
+                                        <strong>{{ errors['email'][0] }}</strong>
+                                    </span>
                                 </div>
                             </div>
 
@@ -41,13 +35,10 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
 
                                 <div class="col-md-6">
-                                    <input v-model="password" id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                    <!-- @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror -->
+                                    <input v-model="password" id="password" type="password" class="form-control" :class="{ 'is-invalid' : 'password' in errors}" name="password" required autocomplete="new-password">
+                                    <span v-if="errors['password']" class="invalid-feedback" role="alert">
+                                        <strong>{{ errors['password'][0] }}</strong>
+                                    </span>
                                 </div>
                             </div>
 
