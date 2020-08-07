@@ -11,7 +11,7 @@
                 <a href="#" @click='logout()'>Logout</a>
             </div>
 
-            <login-form :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
+            <login-form @loggedin="setUser"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
             <register-form @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
         </div>
 </template>

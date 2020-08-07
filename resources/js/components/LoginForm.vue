@@ -6,14 +6,14 @@
                     <div class="card-header">Login</div>
 
                     <div class="card-body">
-                        <form method="POST" :action="loginRoute">
+                        <form method="POST" @submit="login()">
                             <input type="hidden" name="_token" :value="csrf">
 
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="" required autocomplete="email" autofocus>
+                                    <input v-model="email" id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="" required autocomplete="email" autofocus>
 
                                     <!-- @error('email')
                                         <span class="invalid-feedback" role="alert">
@@ -27,7 +27,7 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                    <input v-model="password" id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
                                     <!-- @error('password')
                                         <span class="invalid-feedback" role="alert">
@@ -40,7 +40,7 @@
                             <div class="form-group row">
                                 <div class="col-md-6 offset-md-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                                        <input v-model="remember" class="form-check-input" type="checkbox" name="remember" id="remember">
                                         <label class="form-check-label" for="remember">Remember Me</label>
                                     </div>
                                 </div>
@@ -68,5 +68,40 @@
     export default {
         name : 'LoginForm',
         props : ['csrf', 'loginRoute'],
+        data : function () {
+            return {
+                email : '',
+                password : '',
+                remember : false
+            }
+        },
+        methods : {
+            login() {
+                event.preventDefault();
+                let data = {
+                    email : this.email,
+                    password : this.password
+                };
+                if(this.remember)
+                    data['remember'] = 'on';
+                fetch(this.loginRoute, {
+                    method : 'POST',
+                    body : JSON.stringify(data),
+                    headers : {
+                        "Content-Type": "application/json; charset=utf-8",
+                        'X-CSRF-TOKEN' : this.csrf,
+                    },
+                })
+                .then(data => data.json())
+                .then(data => {
+                    if(!data['success'])
+                        this.errors = data['errors'];
+                    else {
+                        this.$emit('loggedin', data['user']);
+                    }
+                })
+                .catch(error => console.log(error));
+            }
+        }
     }
 </script>
