@@ -79,6 +79,7 @@
         methods : {
             register() {
                 event.preventDefault();
+                this.$emit('toggle-load-overlay', true);
                 fetch(this.registerRoute, {
                     method : 'POST',
                     body : JSON.stringify({
@@ -99,8 +100,12 @@
                     else {
                         this.$emit('registered', data['user']);
                     }
+                    this.$emit('toggle-load-overlay', false);
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    this.$emit('toggle-load-overlay', false);
+                    console.log(error);
+                });
             }
         }
     }

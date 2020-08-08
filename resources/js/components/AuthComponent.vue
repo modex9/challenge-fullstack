@@ -1,5 +1,7 @@
-<template>        
+<template> 
         <div class="container">
+            <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="true" color="blue" loader='dots' background-color='#bfd5e4'>
+            </loading>
             <!-- Authentication Links -->
             <div class="auth-inks" v-if="!user">
                 <a class="nav-link" href="#" @click="showLoginForm = true; showRegForm = false">Login</a>
@@ -11,20 +13,22 @@
                 <a href="#" @click='logout()'>Logout</a>
             </div>
 
-            <login-form @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
-            <register-form @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
+            <login-form @toggle-load-overlay='toggleLoadOverlay' @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
+            <register-form @toggle-load-overlay='toggleLoadOverlay' @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
         </div>
 </template>
 
 <script>
     import LoginForm from "./LoginForm";
     import RegisterForm from "./RegisterForm";
-
+    // Import stylesheet
+        // Import component
+    import Loading from 'vue-loading-overlay';
     export default {
         name : 'AuthHeader',
         props : ['loginRoute', 'registerRoute', 'logoutRoute', 'sessionUser'],
         components : {
-            LoginForm, RegisterForm
+            LoginForm, RegisterForm, Loading
         },
         data : function () {
             return {
@@ -32,6 +36,7 @@
                 showLoginForm: false,
                 showRegForm: false,
                 user : !this.sessionUser ? null : JSON.parse(this.sessionUser),
+                isLoading : false,
             }
         },
         computed : {
@@ -41,6 +46,7 @@
         },
         methods : {
             logout() {
+                this.isLoading = true;
                 fetch(this.logoutRoute, {
                     method : 'POST',
                     headers : {
@@ -56,7 +62,8 @@
                         this.updateTokenDOM();
                     }
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.log(error))
+                .finally(() => this.isLoading = false);
             },
             setUser(user) {
                 this.user = user;
@@ -68,7 +75,13 @@
             },
             updateTokenDOM() {
                 document.querySelector('meta[name="csrf-token"]').setAttribute('content', this.csrf);
+            },
+            toggleLoadOverlay(displayOverlay) {
+                this.isLoading = displayOverlay;
             }
         },
     }
 </script>
+<style lang="css">
+    @import '/node_modules/vue-loading-overlay/dist/vue-loading.css';
+</style>

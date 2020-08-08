@@ -92,6 +92,7 @@
                 };
                 if(this.remember)
                     data['remember'] = 'on';
+                this.$emit('toggle-load-overlay', true);
                 fetch(this.loginRoute, {
                     method : 'POST',
                     body : JSON.stringify(data),
@@ -107,10 +108,14 @@
                     else {
                         this.csrf = data['csrf'];
                         this.$emit('loggedin', data['user']);
-                        this.$emit('update-token', data['csrf'])
+                        this.$emit('update-token', data['csrf']);
                     }
+                    this.$emit('toggle-load-overlay', false);
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    this.$emit('toggle-load-overlay', false);
+                    console.log(error);
+                });
             },
             providerLogin() {
                 event.preventDefault();
