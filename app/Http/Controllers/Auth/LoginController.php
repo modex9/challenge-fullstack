@@ -7,6 +7,10 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -100,5 +104,33 @@ class LoginController extends Controller
             'errors' => [$this->username() => [trans('auth.failed')]]
 
         )); 
+    }
+
+    public function redirectToProvider($provider)
+    {
+        try {
+            return Socialite::driver($provider)->redirect();
+        } catch(\Throwable $e) {
+            return response()->json(array(
+                'success' => false,
+                'errors' => $e->getMessage()
+            ));
+        }
+        
+    }
+
+    public function handleProviderCallback($provider)
+    {
+        $provider_user = Socialite::driver($provider)->user();
+        if($provider_user->email) {
+            $user = User::firstOrCreate([
+                'email' => $provider_user->email
+            ], [
+                'name' => $provider_user->name ?? $provider_user->nickname,
+                'password' => Hash::make(Str::random(16)),
+            ]);
+            Auth::login($user, true);
+        }
+        return redirect('/');
     }
 }

@@ -40,6 +40,18 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-4">
+                                    <button name="github" @click="providerLogin" class="btn btn-secondary">Login with GitHub</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-4">
+                                    <button name="facebook" @click="providerLogin" class="btn btn-secondary">Login with Facebook</button>
+                                </div>
+                            </div>
+
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary">Login</button>
@@ -68,6 +80,7 @@
                 password : '',
                 remember : false,
                 errors : {},
+                loginProviders : ['github', 'facebook']
             }
         },
         methods : {
@@ -98,7 +111,14 @@
                     }
                 })
                 .catch(error => console.log(error));
-            }
+            },
+            providerLogin() {
+                event.preventDefault();
+                const providerName = event.target.getAttribute('name');
+                if(!this.loginProviders.includes(providerName))
+                    alert(`Provider ${providerName} is not supported.`);
+                document.location = `${this.loginRoute}/${providerName}`;
+            },
         }
     }
 </script>
