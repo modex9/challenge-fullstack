@@ -22,7 +22,7 @@
 
     export default {
         name : 'AuthHeader',
-        props : ['loginRoute', 'registerRoute', 'logoutRoute'],
+        props : ['loginRoute', 'registerRoute', 'logoutRoute', 'sessionUser'],
         components : {
             LoginForm, RegisterForm
         },
@@ -31,7 +31,7 @@
                 csrf : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 showLoginForm: false,
                 showRegForm: false,
-                user : null,
+                user : !this.sessionUser ? null : JSON.parse(this.sessionUser),
             }
         },
         computed : {
