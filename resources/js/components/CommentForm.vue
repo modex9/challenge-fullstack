@@ -7,18 +7,18 @@
                 <div class="col-md-6">
                     <input v-model="content" id="content" type="text" class="form-control" :class="{ 'is-invalid' : 'content' in errors}" name="content" value="" required autocomplete="name" autofocus>
                     <div v-if="errors && !errors['content']" class="is-invalid"></div>
-                    <span v-for="error in errors" class="invalid-feedback" role="alert">
+                    <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
                         <strong>{{ error[0] }}</strong>
                     </span>
                 </div>
                 <div class="form-group row mb-0">
                     <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">Post</button>
+                        <button type="submit" class="btn btn-primary" :disabled="!user">Post</button>
                     </div>
                 </div>
             </div>
         </form>
-        <p v-if="!user">You must <a href="#" @click="$emit('show-login')">login to</a></p>
+        <p v-if="!user">You must <a href="#" @click="$emit('show-login')">login </a> to post a comment.</p>
     </div>
 </template>
 
@@ -35,10 +35,13 @@
         methods : {
             saveComment() {
                 event.preventDefault();
+                this.errors = {};
+                this.$emit('load-overlay-comment', true);
                 fetch(this.saveCommentRoute, {
                     method : 'POST',
                     body : JSON.stringify({
                         'content' : this.content,
+                        'user_id' : this.user.id
                     }),
                     headers : {
                         "Content-Type": "application/json; charset=utf-8",
@@ -52,8 +55,12 @@
                     else {
                         this.$emit('new-comment', data['comment']);
                     }
+                    this.$emit('load-overlay-comment', false);
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    this.$emit('load-overlay-comment', false);
+                    console.log(error);
+                });
             },
         }
     }

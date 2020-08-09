@@ -2,9 +2,9 @@
     <div class="container">
         <h4 v-if='!comments'>No comments at this moment.</h4>
         <ul v-else>
-            <li v-for="comment in comments">{{comment.content}}</li>
+            <li v-for="comment in comments" v-bind:key='comment.id'>{{comment.id}} : {{comment.content}}</li>
         </ul>
-        <comment-form :csrf="csrf" :saveCommentRoute="saveCommentRoute" @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
+        <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute" @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
     </div>
 </template>
 
@@ -26,6 +26,8 @@
         },
         methods : {
             getComments() {
+                this.toggleLoadOverlay(true);
+                let comments = {};
                 fetch(this.getCommentsRoute, {
                     method : 'GET',
                     headers : {
@@ -36,13 +38,22 @@
                 .then(data => data.json())
                 .then(data => {
                     data.forEach(val => {
-                            comments[val.id] = val;
+                        comments[val.id] = val;
                     });
+                    this.toggleLoadOverlay(false);
+                    if(data.length > 0)
+                        this.comments = comments;
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    this.$emit('toggle-load-overlay', false);
+                    console.log(error);
+                });
             },
             addComment(comment) {
-                this.comments[commnet.id] = comment;
+                Vue.set(this.comments, comment.id, comment);
+            },
+            toggleLoadOverlay(displayOverlay) {
+                this.$emit('toggle-load-overlay', displayOverlay);
             },
         }
     }
