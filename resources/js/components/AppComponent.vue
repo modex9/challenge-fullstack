@@ -25,7 +25,7 @@
     import CoommetnsComponent from "./CommentsComponent";
     export default {
         name : 'AppComponent',
-        props : ['loginRoute', 'registerRoute', 'logoutRoute', 'sessionUser', 'showLoginForm', 'getCommentsRoute', 'saveCommentRoute'],
+        props : ['loginRoute', 'registerRoute', 'logoutRoute', 'sessionUser', 'getCommentsRoute', 'saveCommentRoute'],
         components : {
             LoginForm, RegisterForm, Loading, CoommetnsComponent
         },
@@ -33,6 +33,7 @@
             return {
                 csrf : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 showRegForm: false,
+                showLoginForm : false,
                 user : !this.sessionUser ? null : JSON.parse(this.sessionUser),
                 isLoading : false,
             }
