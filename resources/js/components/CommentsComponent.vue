@@ -15,10 +15,9 @@
         components : {
             CommentForm
         },
-        props : ['getCommentsRoute', 'saveCommentRoute', 'user'],
+        props : ['getCommentsRoute', 'saveCommentRoute', 'user', 'csrf'],
         data : function() {
             return {
-                csrf : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 comments : null,
             }
         },

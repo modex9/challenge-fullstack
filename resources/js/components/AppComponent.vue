@@ -14,7 +14,7 @@
 
             <login-form @toggle-load-overlay='toggleLoadOverlay' @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
             <register-form @toggle-load-overlay='toggleLoadOverlay' @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
-            <comments-component @show-login="showLoginForm = true; showRegForm = false" :user="user" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
+            <comments-component @show-login="showLoginForm = true; showRegForm = false" :user="user" :csrf="csrf" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
         </div>
 </template>
 

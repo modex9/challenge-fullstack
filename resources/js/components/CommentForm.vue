@@ -6,6 +6,7 @@
                 <label for="name" class="col-md-4 col-form-label text-md-right">Add a comment</label>
                 <div class="col-md-6">
                     <input v-model="content" id="content" type="text" class="form-control" :class="{ 'is-invalid' : 'content' in errors}" name="content" value="" required autocomplete="name" autofocus>
+                    <div v-if="errors && !errors['content']" class="is-invalid"></div>
                     <span v-for="error in errors" class="invalid-feedback" role="alert">
                         <strong>{{ error[0] }}</strong>
                     </span>
