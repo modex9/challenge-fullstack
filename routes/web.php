@@ -23,3 +23,4 @@ Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('comments', 'CommentsController@getComments')->name('getComments');
 Route::post('comment', 'CommentsController@store')->name('saveComment');
+Route::delete('comment/{comment}', 'CommentsController@destroy')->name('deleteComment');

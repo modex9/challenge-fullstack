@@ -14,7 +14,8 @@
 
             <login-form @toggle-load-overlay='toggleLoadOverlay' @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
             <register-form @toggle-load-overlay='toggleLoadOverlay' @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
-            <comments-component @toggle-load-overlay='toggleLoadOverlay' @show-login="showLoginForm = true; showRegForm = false" :user="user" :csrf="csrf" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
+            <comments-component @toggle-load-overlay='toggleLoadOverlay' @show-login="showLoginForm = true; showRegForm = false"
+                 :user="user" :csrf="csrf" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
         </div>
 </template>
 
@@ -22,12 +23,12 @@
     import LoginForm from "./LoginForm";
     import RegisterForm from "./RegisterForm";
     import Loading from 'vue-loading-overlay';
-    import CoommetnsComponent from "./CommentsComponent";
+    import CommetnsComponent from "./CommentsComponent";
     export default {
         name : 'AppComponent',
         props : ['loginRoute', 'registerRoute', 'logoutRoute', 'sessionUser', 'getCommentsRoute', 'saveCommentRoute'],
         components : {
-            LoginForm, RegisterForm, Loading, CoommetnsComponent
+            LoginForm, RegisterForm, Loading, CommetnsComponent
         },
         data : function () {
             return {

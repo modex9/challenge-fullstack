@@ -35,6 +35,10 @@
         methods : {
             saveComment() {
                 event.preventDefault();
+                if(!this.user || !this.user.id) {
+                    alert('You must login to post comments.');
+                    return;
+                }
                 this.errors = {};
                 this.$emit('load-overlay-comment', true);
                 fetch(this.saveCommentRoute, {
