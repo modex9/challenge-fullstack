@@ -22,4 +22,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('comments', 'CommentsController@getComments')->name('getComments');
-Route::post('comment', 'CommentsController@getComments')->name('saveComment');
+Route::post('comment', 'CommentsController@store')->name('saveComment');
