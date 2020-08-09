@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentsController extends Controller
 {
+    protected $comments;
+
+    public function __construct() {
+        $this->comments = Comment::all();
+    }
+
     protected function validator(array $data)
     {
         $rules = [
@@ -50,12 +56,11 @@ class CommentsController extends Controller
     }
 
     public function getComments() {
-        $comments = Comment::all();
-        foreach ($comments as $comment) {
+        foreach ($this->comments as $comment) {
             $comment->user = $comment->user;
         }
-        $comments_tree = self::createTree($comments);
-        return json_encode($comments_tree);
+        $comments_tree = self::createTree($this->comments);
+        return json_encode(['comments' => $comments_tree]);
     }
 
     public function destroy(Comment $comment)
@@ -72,8 +77,28 @@ class CommentsController extends Controller
                 'errors' => ['forgery' => ['The comment you are trying to delete is not yours.']]
             ));
         $comment_id = $comment->id;
-        $comment->delete();
-        return response()->json(array('success' => true, 'comment_id' => $comment_id), 200);
+        
+        // If element is not root, we need a path to it in order to find it in CommentsComponent.
+        $trail = $comment->getPathToRoot(self::createTree($this->comments));
+        $response = [
+            'success' => true,
+            'comment_id' => $comment_id
+        ];
+        if($trail)
+            $response['trail'] = json_encode(array_reverse($trail));
+
+        // If @comment has children, delete them as well.
+        if(Comment::where('parent', $comment->id)->get()->first()) {
+            $deleted = $comment->deleteRecursive($comment->id);
+            if(!$deleted) {
+                $response['success'] = false;
+                $response['errors'] = ['recursive-deletion-failed' => ['An error occured when deleting the child comments.']];
+                return response()->json($response);
+            }
+        }
+        else
+            $comment->delete();
+        return response()->json($response, 200);
     }
 
     protected static function createTree($elements, $parentId = 0) {
@@ -84,7 +109,7 @@ class CommentsController extends Controller
                 if ($children) {
                     $element['children'] = $children;
                 }
-                $tree[] = $element;
+                $tree[$element->id] = $element;
             }
         }
 

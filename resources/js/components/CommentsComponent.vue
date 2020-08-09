@@ -5,7 +5,7 @@
         </span>
         <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
          @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
-         <comment-component :comments="comments" :is-child="false"></comment-component>
+         <comment-component v-if="comments" :comments="comments" :is-child="false" @delete-comment="deleteComment" :user="user"></comment-component>
     </div>
 </template>
 :id="'comment-'comment.id"
@@ -40,12 +40,9 @@
                 })
                 .then(data => data.json())
                 .then(data => {
-                    data.forEach(val => {
-                        comments[val.id] = val;
-                    });
                     this.toggleLoadOverlay(false);
-                    if(data.length > 0)
-                        this.comments = comments;
+                    if(data['comments'])
+                        this.comments = data['comments'];
                 })
                 .catch(error => {
                     this.$emit('toggle-load-overlay', false);
@@ -75,12 +72,23 @@
                     if(!data['success'])
                         this.errors = data['errors'];
                     else {
-                        Vue.delete(this.comments, data['comment_id']);
+                        if(data['trail']) {     
+                            const trail = JSON.parse(data['trail']);
+                            let elToDelete = null;
+                            trail.forEach(val => {
+                                if(!elToDelete)
+                                    elToDelete = this.comments[val];
+                                else
+                                    elToDelete = elToDelete['children'][val];
+                            });
+                            Vue.delete(elToDelete['children'], data['comment_id']);
+                        }
+                        else
+                            Vue.delete(this.comments, data['comment_id']);
                     }
                     this.toggleLoadOverlay(false);
                 })
                 .catch(error => {
-
                     this.toggleLoadOverlay(false);
                     console.log(error);
                 });
