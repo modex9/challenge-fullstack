@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Comment;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class CommentsController extends Controller
 {
@@ -20,6 +21,13 @@ class CommentsController extends Controller
     }
 
     public function store(Request $request) {
+
+        $user = Auth::user();
+        if($user->id !== $request->user_id)
+            return response()->json(array(
+                'success' => false,
+                'errors' => ['forgery' => ['Do not try to impersonate another user. Continuing this activity may result in your account suspension.']]
+            ));
         $validator = $this->validator($request->all());
 
         if($validator->fails()) {
