@@ -43,15 +43,51 @@ class CommentsController extends Controller
         ];
         if($request->parent)
             $data['parent'] = $request->parent;
-        $comment = Comment::create($data);
+        $post = Comment::create($data);
+        $comment = $post;
+        $comment->user = $post->user;
         return response()->json(array('success' => true, 'comment' => $comment), 200);
     }
 
     public function getComments() {
         $comments = Comment::all();
         foreach ($comments as $comment) {
-            $comment->user = $comment->user();
+            $comment->user = $comment->user;
         }
-        return json_encode($comments);
+        $comments_tree = self::createTree($comments);
+        return json_encode($comments_tree);
+    }
+
+    public function destroy(Comment $comment)
+    {
+        $user = Auth::user();
+        if(!$comment)
+            return response()->json(array(
+                'success' => false,
+                'errors' => ['not-found' => ['The comment you are trying to delete does not exist.']]
+            ));
+        if($user->id !== $comment->user->id)
+            return response()->json(array(
+                'success' => false,
+                'errors' => ['forgery' => ['The comment you are trying to delete is not yours.']]
+            ));
+        $comment_id = $comment->id;
+        $comment->delete();
+        return response()->json(array('success' => true, 'comment_id' => $comment_id), 200);
+    }
+
+    protected static function createTree($elements, $parentId = 0) {
+        $tree = [];
+        foreach ($elements as $element) {
+            if ($element['parent'] == $parentId) {
+                $children = self::createTree($elements, $element['id']);
+                if ($children) {
+                    $element['children'] = $children;
+                }
+                $tree[] = $element;
+            }
+        }
+
+        return $tree;
     }
 }
