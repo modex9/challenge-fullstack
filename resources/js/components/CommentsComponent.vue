@@ -3,24 +3,19 @@
         <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
             <strong>{{ error[0] }}</strong>
         </span>
-        <h4 v-if='!comments'>No comments at this moment.</h4>
-        <ul v-else>
-            <li v-for="comment in comments" v-bind:key='comment.id' >
-                <p>{{comment.id}} : {{comment.content}}</p>
-                <button v-if="comment.user && user && comment.user.id == user.id" :id="'comment-' + comment.id" @click="deleteComment">x</button>
-            </li>
-        </ul>
         <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
          @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
+         <comment-component :comments="comments" :is-child="false"></comment-component>
     </div>
 </template>
 :id="'comment-'comment.id"
 <script>
     import CommentForm from "./CommentForm";
+    import CommentComponent from "./CommentComponent";
     export default {
         name : 'CommentsComponent',
         components : {
-            CommentForm
+            CommentForm, CommentComponent
         },
         props : ['getCommentsRoute', 'saveCommentRoute', 'user', 'csrf'],
         data : function() {
@@ -85,6 +80,7 @@
                     this.toggleLoadOverlay(false);
                 })
                 .catch(error => {
+
                     this.toggleLoadOverlay(false);
                     console.log(error);
                 });
