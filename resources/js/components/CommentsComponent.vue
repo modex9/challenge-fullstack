@@ -5,7 +5,10 @@
         </span>
         <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
          @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
-         <comment-component v-if="comments" :comments="comments" :is-child="false" @delete-comment="deleteComment" :user="user"></comment-component>
+         <comment-component v-if="comments" :csrf="csrf" :comments="comments" :is-child="false"
+          @delete-comment="deleteComment" :user="user" :saveCommentRoute="saveCommentRoute"
+          @load-overlay-comment="toggleLoadOverlay">
+         </comment-component>
     </div>
 </template>
 :id="'comment-'comment.id"
