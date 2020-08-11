@@ -13,14 +13,16 @@
                             <p class="card-text">{{"parent ID: " + comment.parent}}</p>
                             {{comment.content}}
                         </div>
-                        <a v-if="user" href="#" @click='getCommentId' :id="'replay-to-' + comment.id">Reply</a>
-                        <comment-form v-if="replyCommentId == comment.id" @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
-                            @new-comment="addComment" :user="user"></comment-form>
+                        <a v-if="user" href="#" @click='replyTrigger' :id="'replay-to-' + comment.id">Reply</a>
+                        <comment-form v-if="repliedCommentId == comment.id" @load-overlay-comment="toggleLoadOverlay"
+                         :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
+                         :replied-comment-id="repliedCommentId"></comment-form>
                     </div>
                 </div>
             </div>
-            <comment-component v-if="comment['children']" :comments="comment['children']"
-                 @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay"></comment-component>
+            <comment-component v-if="comment['children']" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
+                 @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
+                  @reply-to-comment="sendRepliedCommentId" :commentID="repliedCommentId"></comment-component>
         </div>
     </div>
 </template>
@@ -30,24 +32,34 @@
     export default {
         name : 'CommentComponent',
         components : { CommentForm }, 
-        props : ['comments', 'user', 'saveCommentRoute', 'csrf'],
+        props : ['comments', 'user', 'saveCommentRoute', 'csrf', 'commentID'],
         data : function() {
             return {
-                replyCommentId : 0,
+                repliedCommentId : 0,
             }
+        },
+        watch : {
+            commentID() {
+                this.repliedCommentId = this.commentID;
+            },
         },
         methods : {
             deleteComment() {
                 this.$emit('delete-comment');
             },
-            addComment(comment) {
-                this.$emit('new-comment', comment);
+            addComment(data) {
+                this.$emit('new-comment', data);
             },
             toggleLoadOverlay(displayOverlay) {
                 this.$emit('load-overlay-comment', displayOverlay);
             },
-            getCommentId() {
-                this.replyCommentId = event.target.getAttribute('id').split("-").pop();
+            sendRepliedCommentId(commentID) {
+                this.repliedCommentId = commentID;
+                this.$emit('reply-to-comment', commentID);
+            },
+            replyTrigger() {
+                this.repliedCommentId = event.target.getAttribute('id').split("-").pop();
+                this.$emit('reply-to-comment', this.repliedCommentId);
             }
         }
     }
