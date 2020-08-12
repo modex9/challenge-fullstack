@@ -50,6 +50,17 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label for="avatar" class="col-md-4 col-form-label text-md-right">Avatar link (optional)</label>
+
+                                <div class="col-md-6">
+                                    <input v-model="avatar" id="avatar" type="text" class="form-control" name="avatar" :class="{ 'is-invalid' : 'avatar' in errors}">
+                                    <span v-if="errors['avatar']" class="invalid-feedback" role="alert">
+                                        <strong>{{ errors['avatar'][0] }}</strong>
+                                    </span>
+                                </div>
+                            </div>
+
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">Register</button>
@@ -73,6 +84,7 @@
                 email : 'test@test.com',
                 password : 'testas123',
                 passwordConfirm : 'testas123',
+                avatar: '',
                 errors : {},
             }
         },
@@ -86,7 +98,8 @@
                         name : this.name,
                         email : this.email,
                         password : this.password,
-                        password_confirmation : this.passwordConfirm
+                        password_confirmation : this.passwordConfirm,
+                        avatar : this.avatar
                     }),
                     headers : {
                         "Content-Type": "application/json; charset=utf-8",

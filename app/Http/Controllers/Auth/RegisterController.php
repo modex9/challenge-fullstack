@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;
+use App\Rules\ImageUrl;
 
 class RegisterController extends Controller
 {
@@ -52,11 +53,13 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $rules = [
             'name' => ['required', 'string', 'max:255', 'min:4'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+            'avatar' => ['bail', 'active_url', new ImageUrl],
+        ];
+        return Validator::make($data, $rules);
     }
 
     /**
@@ -71,6 +74,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'avatar' => $data['avatar']
         ]);
     }
 
