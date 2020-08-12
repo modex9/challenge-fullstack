@@ -25,7 +25,7 @@
 <script>
     export default {
         name : 'CommentForm',
-        props : ['saveCommentRoute', 'csrf', 'user'],
+        props : ['saveCommentRoute', 'csrf', 'user', 'repliedCommentId'],
         data : function() {
             return {
                 content : '',
@@ -41,12 +41,15 @@
                 }
                 this.errors = {};
                 this.$emit('load-overlay-comment', true);
+                let data = {
+                    'content' : this.content,
+                    'user_id' : this.user.id
+                }
+                if(this.repliedCommentId !== undefined)
+                    data['parent'] = this.repliedCommentId;
                 fetch(this.saveCommentRoute, {
                     method : 'POST',
-                    body : JSON.stringify({
-                        'content' : this.content,
-                        'user_id' : this.user.id
-                    }),
+                    body : JSON.stringify(data),
                     headers : {
                         "Content-Type": "application/json; charset=utf-8",
                         'X-CSRF-TOKEN' : this.csrf,
@@ -57,7 +60,7 @@
                     if(!data['success'])
                         this.errors = data['errors'];
                     else {
-                        this.$emit('new-comment', data['comment']);
+                        this.$emit('new-comment', data);
                     }
                     this.$emit('load-overlay-comment', false);
                 })

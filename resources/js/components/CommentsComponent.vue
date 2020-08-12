@@ -5,9 +5,9 @@
         </span>
         <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
          @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
-         <comment-component v-if="comments" :csrf="csrf" :comments="comments" :is-child="false"
-          @delete-comment="deleteComment" :user="user" :saveCommentRoute="saveCommentRoute"
-          @load-overlay-comment="toggleLoadOverlay">
+         <comment-component v-if="comments" :csrf="csrf" :comments="comments"
+          @delete-comment="deleteComment" :user="user" :save-comment-route="saveCommentRoute"
+          @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment">
          </comment-component>
     </div>
 </template>
@@ -52,8 +52,29 @@
                     console.log(error);
                 });
             },
-            addComment(comment) {
-                Vue.set(this.comments, comment.id, comment);
+            addComment(data) {
+                if(data['trail'])
+                    this.comments = data['comments'];
+                else {
+                    const comment = data['comment'];
+                    Vue.set(this.comments, comment.id, comment);
+                }
+                //!!! Getting all comments for a single update.
+                // Todo: spend another 3-4 hours and try to find more elegent way.
+                // const comment = data['comment'];
+                // if(data['trail']) {     
+                //     const trail = JSON.parse(data['trail']);
+                //     let branchToFill = null;
+                //     trail.forEach(val => {
+                //         if(!branchToFill)
+                //             branchToFill = this.comments[val];
+                //         else
+                //             branchToFill = branchToFill['children'][val];
+                //     });
+                //     Vue.set(branchToFill['children'], comment.id, comment);
+                //     this.toggleLoadOverlay(true);
+                //     this.getComments();
+                // }
             },
             toggleLoadOverlay(displayOverlay) {
                 this.$emit('toggle-load-overlay', displayOverlay);

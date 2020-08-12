@@ -50,9 +50,21 @@ class CommentsController extends Controller
         if($request->parent)
             $data['parent'] = $request->parent;
         $post = Comment::create($data);
+        $this->comments = Comment::all();
         $comment = $post;
         $comment->user = $post->user;
-        return response()->json(array('success' => true, 'comment' => $comment), 200);
+        $trail = $comment->getPathToRoot(self::createTree($this->comments));
+        $response = [
+            'success' => true,
+            'comment' => $comment
+        ];
+        if($trail) {
+            $comments = (array)json_decode($this->getComments());
+            $comments['trail'] = $trail;
+            $comments['success'] = true;
+            return json_encode($comments);
+        }
+        return response()->json($response, 200);
     }
 
     public function getComments() {

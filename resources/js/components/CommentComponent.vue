@@ -2,7 +2,7 @@
     <div class="container">
         <h4 v-if='!comments && !isChild'>No comments at this moment.</h4>
         <div  v-else v-for="comment in comments" v-bind:key='comment.id' :class="'comment-wrapper-' + comment.id">
-            <div class="row justify-content-center">
+            <div v-if="comment" class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header">{{comment.user.name}}
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <comment-component v-if="comment['children']" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
+            <comment-component v-if="comment && comment['children']" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
                  @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
                   @reply-to-comment="sendRepliedCommentId" :commentID="repliedCommentId"></comment-component>
         </div>
