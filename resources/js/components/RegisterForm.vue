@@ -3,7 +3,12 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Register</div>
+                    <div class="card-header">
+                        Register
+                         <button class="btn btn-black" @click="$emit('close-register')">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
 
                     <div class="card-body">
                         <form method="POST" @submit="register()">

@@ -18,10 +18,12 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import VueConfirmDialog from 'vue-confirm-dialog';
+import SlideUpDown from 'vue-slide-up-down';
 Vue.use(VueConfirmDialog);
 Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
 Vue.component('app-component', require('./components/AppComponent.vue').default);
 Vue.component('comments-component', require('./components/CommentsComponent.vue').default);
+Vue.component('slide-up-down', SlideUpDown);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -1,6 +1,6 @@
 <template>
     <div class="container comments-container">
-        <h4 v-if='!comments && !isChild'>No comments at this moment.</h4>
+        <h4 v-if='!comments'>No comments at this moment.</h4>
         <ul  v-else v-for="comment in comments" v-bind:key='comment.id' class="media-list">
             <li v-if="comment" class="media">
                     <a class="pull-left" href="#">
@@ -36,11 +36,13 @@
                 :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
                 :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>
 
-            <comment-component v-if="comment && comment['children'] && Object.keys(comment['children']).length != 0 && showChildCommentIds.includes(comment.id)"
-             :comments="comment['children']" 
-            :csrf="csrf" :save-comment-route="saveCommentRoute" :commentID="repliedCommentId"
-            @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
-            @reply-to-comment="sendRepliedCommentId"></comment-component>
+            <slide-up-down :active="comment && comment['children'] && Object.keys(comment['children']).length != 0 && showChildCommentIds.includes(comment.id)" :duration="1500">
+                <comment-component
+                :comments="comment['children']" 
+                :csrf="csrf" :save-comment-route="saveCommentRoute" :commentID="repliedCommentId"
+                @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
+                @reply-to-comment="sendRepliedCommentId"></comment-component>
+            </slide-up-down>
 
         </ul> 
     </div>

@@ -12,8 +12,12 @@
                 <a href="#" @click='logout()'>Logout</a>
             </div>
 
-            <login-form @toggle-load-overlay='toggleLoadOverlay' @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute" v-if="showLoginForm"></login-form>
-            <register-form @toggle-load-overlay='toggleLoadOverlay' @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" v-if="showRegForm"></register-form>
+            <slide-up-down :active="showLoginForm" :duration="1000">
+                <login-form @close-login="showLoginForm = false" @toggle-load-overlay='toggleLoadOverlay' @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute"></login-form>
+            </slide-up-down>
+            <slide-up-down :active="showRegForm" :duration="1000">
+                <register-form @close-register="showRegForm = false" @toggle-load-overlay='toggleLoadOverlay' @registered="setUser" :csrf="csrf" :registerRoute="registerRoute"></register-form>
+            </slide-up-down>
             <comments-component @toggle-load-overlay='toggleLoadOverlay' @show-login="showLoginForm = true; showRegForm = false"
                  :user="user" :csrf="csrf" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
         </div>
