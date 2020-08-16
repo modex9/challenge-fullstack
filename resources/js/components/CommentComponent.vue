@@ -18,8 +18,15 @@
                             <p class="media-comment">
                             {{comment.content}}
                             </p>
-                            <a v-if="user && comment.id" class="btn btn-info btn-circle text-uppercase" href="#" @click='replyTrigger' :id="'replay-to-' + comment.id"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
-                            <a v-if="comment.children" class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#replyOne"><span class="glyphicon glyphicon-comment"></span> {{_.size(comment.children) + ' comments.'}}</a>
+                            <a v-if="user && comment.id" class="btn btn-info btn-circle text-uppercase" href="#"
+                             @click='replyTrigger' :id="'replay-to-' + comment.id"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+
+                            <a v-if="comment.children" @click="showCommentChildren" class="btn btn-circle text-uppercase" :class="showChildCommentIds.includes(comment.id) ? 'btn-warning' : 'comments-button'"
+                             data-toggle="collapse" href="#replyOne" :id="'expand-children-' + comment.id">
+                                <span class="glyphicon glyphicon-comment"></span>
+                                {{_.size(comment.children) + ' comments.'}}
+                                <span :class="'glyphicon glyphicon-arrow-' + (showChildCommentIds.includes(comment.id) ? 'up' : 'down')"></span>
+                            </a>
                         </div>              
                     </div>
             </li>  
@@ -28,7 +35,7 @@
                 :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
                 :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>
 
-            <comment-component v-if="comment && comment['children']" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
+            <comment-component v-if="comment && comment['children'] && showChildCommentIds.includes(comment.id)" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
                 @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
                 @reply-to-comment="sendRepliedCommentId" :commentID="repliedCommentId"></comment-component>
 
@@ -45,6 +52,7 @@
         data : function() {
             return {
                 repliedCommentId : 0,
+                showChildCommentIds : [],
             }
         },
         watch : {
@@ -82,6 +90,18 @@
                     y: true
                 };
                 VueScrollTo.scrollTo(replyTarget, 500, options);
+            },
+            showCommentChildren() {
+                var showChildrenTarget = event.target;
+                if(showChildrenTarget.getAttribute('id') == null && showChildrenTarget.classList.contains('glyphicon')) {
+                    showChildrenTarget = showChildrenTarget.parentElement;
+                }
+                var toggleChildrenFor = parseInt(showChildrenTarget.getAttribute('id').split("-").pop());
+                var toggleChildrenForIndex = this.showChildCommentIds.indexOf(toggleChildrenFor);
+                if(toggleChildrenForIndex == -1)
+                    Vue.set(this.showChildCommentIds, this.showChildCommentIds.length, toggleChildrenFor);
+                else
+                    Vue.delete(this.showChildCommentIds, toggleChildrenForIndex);
             }
         }
     }
