@@ -36,9 +36,11 @@
                 :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
                 :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>
 
-            <comment-component v-if="comment && comment['children'] && showChildCommentIds.includes(comment.id)" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
-                @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
-                @reply-to-comment="sendRepliedCommentId" :commentID="repliedCommentId"></comment-component>
+            <comment-component v-if="comment && comment['children'] && Object.keys(comment['children']).length != 0 && showChildCommentIds.includes(comment.id)"
+             :comments="comment['children']" 
+            :csrf="csrf" :save-comment-route="saveCommentRoute" :commentID="repliedCommentId"
+            @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
+            @reply-to-comment="sendRepliedCommentId"></comment-component>
 
         </ul> 
     </div>

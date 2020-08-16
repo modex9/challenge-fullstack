@@ -121,7 +121,12 @@
             },
             confirmCommentDeletion(){
                 //Preserve initial event target, as only it has the comment id that we'll need.
-                const initialEventTarget = event.target;
+                let initialEventTarget = null;
+                if(event.target.getAttribute('id') == null && event.target.classList.contains('glyphicon')) {
+                    initialEventTarget = event.target.parentElement;
+                }
+                else
+                    initialEventTarget = event.target;
                 this.showDeleteConfirm = true;
                 this.$confirm(
                     {
