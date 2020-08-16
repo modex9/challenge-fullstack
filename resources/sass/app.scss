@@ -42,12 +42,24 @@ button[id^='comment-'], .glyphicon-remove {
 }
 
 .comments-container {
-    margin-top: 50px;
-    border: 1px solid #e3e3e3;
-    padding: 24px;
-    border-radius: 6px;
-    max-width: 100%;
-    background: $comments-background;
+    & > :not(#showComments):not(#hideComments)  {
+        margin-top: 50px;
+        border: 1px solid #e3e3e3;
+        padding: 24px;
+        border-radius: 6px;
+        max-width: 100%;
+        background: $comments-background;
+    }
+    & > button {
+        margin-top: 30px;
+        &#showComments {
+            background: #449cea;
+        }
+        &#hideComments {
+            background: orangered;
+        }
+        
+    }
 }
 
 div[id^="replay-form"], #root-comment-form {

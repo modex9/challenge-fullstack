@@ -1,19 +1,23 @@
 <template>
     <div class="comments-container">
+        <!-- Show/hide comments buttons. -->
+        <button v-if="!showComments" id="showComments" @click="showComments = true"  type="button" class="btn btn-primary btn-lg btn-block">Show all comments</button>
+        <button v-else id="hideComments" @click="showComments = false"  type="button" class="btn btn-primary btn-lg btn-block">Hide all comments</button>
+        
+        <slide-up-down :active="showComments" :duration="1000">
+            <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
+                <strong>{{ error[0] }}</strong>
+            </span>
+            <vue-confirm-dialog></vue-confirm-dialog>
 
-        <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
-            <strong>{{ error[0] }}</strong>
-        </span>
-        <vue-confirm-dialog></vue-confirm-dialog>
+            <comment-form v-if="user" @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
+            @new-comment="addComment" :user="user" @show-login="$emit('show-login')" id="root-comment-form"></comment-form>
 
-        <comment-form v-if="user" @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
-         @new-comment="addComment" :user="user" @show-login="$emit('show-login')" id="root-comment-form"></comment-form>
-
-        <comment-component v-if="comments" :csrf="csrf" :comments="comments"
-          @delete-comment="confirmCommentDeletion" :user="user" :save-comment-route="saveCommentRoute"
-          @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment">
-        </comment-component>
-
+            <comment-component v-if="comments" :csrf="csrf" :comments="comments"
+            @delete-comment="confirmCommentDeletion" :user="user" :save-comment-route="saveCommentRoute"
+            @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment">
+            </comment-component>
+        </slide-up-down>
     </div>
 </template>
 :id="'comment-'comment.id"
@@ -30,6 +34,7 @@
             return {
                 comments : null,
                 errors : null,
+                showComments : false,
             }
         },
         created() {
