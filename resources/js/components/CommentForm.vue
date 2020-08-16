@@ -3,18 +3,18 @@
         <form method="POST" @submit="saveComment()">
             <input type="hidden" name="_token" :value="csrf">
             <div class="form-group row">
-                <label for="name" class="col-md-4 col-form-label text-md-right">Add a comment</label>
                 <div class="col-md-6">
-                    <input v-model="content" id="content" type="text" class="form-control" :class="{ 'is-invalid' : 'content' in errors}" name="content" value="" required autocomplete="name" autofocus>
+                    <label for="name" class="col-md-4 col-form-label">Add a comment</label>
+                    <textarea v-model="content" id="content" type="text" class="form-control" :class="{ 'is-invalid' : 'content' in errors}" name="content" value="" required autocomplete="name" autofocus></textarea>
                     <div v-if="errors && !errors['content']" class="is-invalid"></div>
                     <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
                         <strong>{{ error[0] }}</strong>
                     </span>
-                </div>
-                <div class="form-group row mb-0">
+                                <div class="form-group row mb-0">
                     <div class="col-md-6 offset-md-4">
                         <button type="submit" class="btn btn-primary" :disabled="!user">Post</button>
                     </div>
+                </div>
                 </div>
             </div>
         </form>

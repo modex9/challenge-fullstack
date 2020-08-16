@@ -1,15 +1,18 @@
 <template>
-    <div class="container">
+    <div class="comments-container">
+
         <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
             <strong>{{ error[0] }}</strong>
         </span>
         <vue-confirm-dialog></vue-confirm-dialog>
-        <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
-         @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
-         <comment-component v-if="comments" :csrf="csrf" :comments="comments"
+
+        <comment-form v-if="user" @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
+         @new-comment="addComment" :user="user" @show-login="$emit('show-login')" id="root-comment-form"></comment-form>
+
+        <comment-component v-if="comments" :csrf="csrf" :comments="comments"
           @delete-comment="confirmCommentDeletion" :user="user" :save-comment-route="saveCommentRoute"
           @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment">
-         </comment-component>
+        </comment-component>
 
     </div>
 </template>

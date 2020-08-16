@@ -1,5 +1,5 @@
 <template>
-    <div class="container comments-container">
+    <div class="comment-container">
         <h4 v-if='!comments'>No comments at this moment.</h4>
         <ul  v-else v-for="comment in comments" v-bind:key='comment.id' class="media-list">
             <li v-if="comment" class="media">
@@ -28,14 +28,15 @@
                                 {{_.size(comment.children) + ' comments'}}
                                 <span :class="'glyphicon glyphicon-arrow-' + (showChildCommentIds.includes(comment.id) ? 'up' : 'down')"></span>
                             </a>
-                        </div>              
+                        </div>
+                        <!-- Reply form, which can be rendered for each comment -->
+                        <comment-form v-if="user && repliedCommentId == comment.id" @load-overlay-comment="toggleLoadOverlay"
+                        :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
+                        :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>              
                     </div>
             </li>  
 
-            <comment-form v-if="user && repliedCommentId == comment.id" @load-overlay-comment="toggleLoadOverlay"
-                :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
-                :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>
-
+            <!-- Next level child comments. -->
             <slide-up-down :active="comment && comment['children'] && Object.keys(comment['children']).length != 0 && showChildCommentIds.includes(comment.id)" :duration="1500">
                 <comment-component
                 :comments="comment['children']" 

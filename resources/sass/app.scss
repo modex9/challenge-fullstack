@@ -17,7 +17,7 @@
     border-color: silver;
 }
 
-.comments-container {
+.comment-container {
     border: 1px solid #e3e3e3;
     padding: 24px;
     border-radius: 6px;
@@ -35,9 +35,37 @@ button[id^='comment-'], .glyphicon-remove {
     padding: 6px 7px;
     font-size: 11px;
     float: right;
+    &:hover {
+        color: #fff;
+        box-shadow: 0px 0px 1px 1px black;
+    }
 }
 
-.btn.btn-black:hover {
-    color: #fff;
-    box-shadow: 0px 0px 1px 1px black;
+.comments-container {
+    margin-top: 50px;
+    border: 1px solid #e3e3e3;
+    padding: 24px;
+    border-radius: 6px;
+    max-width: 100%;
+    background: $comments-background;
+}
+
+div[id^="replay-form"], #root-comment-form {
+    width: 100%;
+    & .col-md-6 {
+        flex: 0 0 100%;
+        max-width: none;
+        text-align: center;
+        margin-left: 0;
+        & button {
+            margin-top: 10px;
+        }
+        & label {
+            float: none;
+        }
+    }
+    & .form-group.mb-0 {
+        width: 100%;
+        margin: 0;
+    }
 }
