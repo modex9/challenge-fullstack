@@ -1,16 +1,17 @@
 <template>
-    <div class="container">
+    <div class="container comments-container">
         <h4 v-if='!comments && !isChild'>No comments at this moment.</h4>
         <ul  v-else v-for="comment in comments" v-bind:key='comment.id' class="media-list">
             <li v-if="comment" class="media">
-                <!-- <button v-if="user && comment.user && user.id == comment.user.id" :id="'comment-' + comment.id" class="btn btn-danger" @click="$emit('delete-comment')">Delete</button> -->
-                
                     <a class="pull-left" href="#">
                         <img class="comment-avatar media-object img-circle" :src="comment.user.avatar" alt="profile">
                     </a>
-
                     <div class="media-body">
                         <div class="well well-lg">
+                            <button v-if="user && comment.user && user.id == comment.user.id" :id="'comment-' + comment.id" class="btn btn-danger"
+                             @click="$emit('delete-comment')">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
                             <h4 class="media-heading text-uppercase reviews">{{comment.user.name}}</h4>
                             <p>
                                 <span>{{ comment.created_at | moment("dddd, MMMM Do YYYY, h:mm") }}</span>
@@ -21,10 +22,10 @@
                             <a v-if="user && comment.id" class="btn btn-info btn-circle text-uppercase" href="#"
                              @click='replyTrigger' :id="'replay-to-' + comment.id"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
 
-                            <a v-if="comment.children" @click="showCommentChildren" class="btn btn-circle text-uppercase" :class="showChildCommentIds.includes(comment.id) ? 'btn-warning' : 'comments-button'"
+                            <a v-if="comment.children && _.size(comment.children) > 0" @click="showCommentChildren" class="btn btn-circle text-uppercase" :class="showChildCommentIds.includes(comment.id) ? 'btn-warning' : 'comments-button'"
                              data-toggle="collapse" href="#replyOne" :id="'expand-children-' + comment.id">
                                 <span class="glyphicon glyphicon-comment"></span>
-                                {{_.size(comment.children) + ' comments.'}}
+                                {{_.size(comment.children) + ' comments'}}
                                 <span :class="'glyphicon glyphicon-arrow-' + (showChildCommentIds.includes(comment.id) ? 'up' : 'down')"></span>
                             </a>
                         </div>              
@@ -65,6 +66,8 @@
                 this.$emit('delete-comment');
             },
             addComment(data) {
+                if(data['trail'])
+                    Vue.set(this.showChildCommentIds, this.showChildCommentIds.length, parseInt(data['trail'][0]));
                 this.$emit('new-comment', data);
             },
             toggleLoadOverlay(displayOverlay) {

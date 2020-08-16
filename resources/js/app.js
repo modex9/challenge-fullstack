@@ -17,6 +17,9 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+import VueConfirmDialog from 'vue-confirm-dialog';
+Vue.use(VueConfirmDialog);
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default);
 Vue.component('app-component', require('./components/AppComponent.vue').default);
 Vue.component('comments-component', require('./components/CommentsComponent.vue').default);
 /**

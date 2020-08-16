@@ -3,12 +3,14 @@
         <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
             <strong>{{ error[0] }}</strong>
         </span>
+        <vue-confirm-dialog></vue-confirm-dialog>
         <comment-form @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
          @new-comment="addComment" :user="user" @show-login="$emit('show-login')"></comment-form>
          <comment-component v-if="comments" :csrf="csrf" :comments="comments"
-          @delete-comment="deleteComment" :user="user" :save-comment-route="saveCommentRoute"
+          @delete-comment="confirmCommentDeletion" :user="user" :save-comment-route="saveCommentRoute"
           @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment">
          </comment-component>
+
     </div>
 </template>
 :id="'comment-'comment.id"
@@ -79,8 +81,8 @@
             toggleLoadOverlay(displayOverlay) {
                 this.$emit('toggle-load-overlay', displayOverlay);
             },
-            deleteComment() {
-                const commentID = event.target.getAttribute('id').split("-").pop();
+            deleteComment(eventTarget) {
+                const commentID = eventTarget.getAttribute('id').split("-").pop();
                 event.preventDefault();
                 this.errors = {};
                 this.toggleLoadOverlay(true);
@@ -116,6 +118,29 @@
                     this.toggleLoadOverlay(false);
                     console.log(error);
                 });
+            },
+            confirmCommentDeletion(){
+                //Preserve initial event target, as only it has the comment id that we'll need.
+                const initialEventTarget = event.target;
+                this.showDeleteConfirm = true;
+                this.$confirm(
+                    {
+                        message: `Do you really want to delete this comment?`,
+                        button: {
+                            no: 'No',
+                            yes: 'Yes'
+                        },
+                        /**
+                         * Callback Function
+                         * @param {Boolean} confirm 
+                         */
+                        callback: confirm => {
+                            if (confirm) {
+                                this.deleteComment(initialEventTarget);
+                            }
+                        }
+                    }
+                )
             },
         }
     }

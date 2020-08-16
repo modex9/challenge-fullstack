@@ -26,6 +26,7 @@
     "dependencies": {
         "glyphicons": "^0.2.0",
         "moment": "^2.27.0",
+        "vue-confirm-dialog": "^1.0.2",
         "vue-loading-overlay": "^3.3.3",
         "vue-loading-spinner": "^1.0.11",
         "vue-lodash": "^2.1.2",

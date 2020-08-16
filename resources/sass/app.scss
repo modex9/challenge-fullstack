@@ -16,3 +16,14 @@
     background-color: silver;
     border-color: silver;
 }
+
+.comments-container {
+    border: 1px solid #e3e3e3;
+    padding: 24px;
+    border-radius: 6px;
+    max-width: 100%;
+}
+
+button[id^='comment-'] {
+    float: right;
+}
