@@ -57,8 +57,11 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255', 'min:4'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'avatar' => ['bail', 'active_url', new ImageUrl],
         ];
+
+        //User is not required to put it in. Therefore, it's validation is also optional.
+        if($data['avatar'])
+            $rules['avatar'] = ['bail', 'active_url', new ImageUrl];
         return Validator::make($data, $rules);
     }
 
