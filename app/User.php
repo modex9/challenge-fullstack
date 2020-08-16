@@ -10,6 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const DEFAULT_AVATAR = 'img/user.png';
     /**
      * The attributes that are mass assignable.
      *
