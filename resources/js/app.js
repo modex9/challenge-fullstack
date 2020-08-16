@@ -5,7 +5,6 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
 /**
  * The following block of code may be used to automatically register your
@@ -25,7 +24,11 @@ Vue.component('comments-component', require('./components/CommentsComponent.vue'
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+import VueLodash from 'vue-lodash';
+import lodash from 'lodash';
+Vue.use(require('vue-moment'));
+Vue.use(require('vue-scrollto'));
+Vue.use(VueLodash, {lodash: lodash });
 const app = new Vue({
     el: '#app',
 });

@@ -1,29 +1,38 @@
 <template>
     <div class="container">
         <h4 v-if='!comments && !isChild'>No comments at this moment.</h4>
-        <div  v-else v-for="comment in comments" v-bind:key='comment.id' :class="'comment-wrapper-' + comment.id">
-            <div v-if="comment" class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">{{comment.user.name}}
-                        <button v-if="user && comment.user && user.id == comment.user.id" :id="'comment-' + comment.id" class="btn btn-danger" @click="$emit('delete-comment')">Delete</button>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">{{'ID : ' + comment.id}}</p>
-                            <p class="card-text">{{"parent ID: " + comment.parent}}</p>
+        <ul  v-else v-for="comment in comments" v-bind:key='comment.id' class="media-list">
+            <li v-if="comment" class="media">
+                <!-- <button v-if="user && comment.user && user.id == comment.user.id" :id="'comment-' + comment.id" class="btn btn-danger" @click="$emit('delete-comment')">Delete</button> -->
+                
+                    <a class="pull-left" href="#">
+                        <img class="comment-avatar media-object img-circle" :src="comment.user.avatar" alt="profile">
+                    </a>
+
+                    <div class="media-body">
+                        <div class="well well-lg">
+                            <h4 class="media-heading text-uppercase reviews">{{comment.user.name}}</h4>
+                            <p>
+                                <span>{{ comment.created_at | moment("dddd, MMMM Do YYYY, h:mm") }}</span>
+                            </p>
+                            <p class="media-comment">
                             {{comment.content}}
-                        </div>
-                        <a v-if="user" href="#" @click='replyTrigger' :id="'replay-to-' + comment.id">Reply</a>
-                        <comment-form v-if="repliedCommentId == comment.id" @load-overlay-comment="toggleLoadOverlay"
-                         :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
-                         :replied-comment-id="repliedCommentId"></comment-form>
+                            </p>
+                            <a v-if="user && comment.id" class="btn btn-info btn-circle text-uppercase" href="#" @click='replyTrigger' :id="'replay-to-' + comment.id"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                            <a v-if="comment.children" class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#replyOne"><span class="glyphicon glyphicon-comment"></span> {{_.size(comment.children) + ' comments.'}}</a>
+                        </div>              
                     </div>
-                </div>
-            </div>
+            </li>  
+
+            <comment-form v-if="user && repliedCommentId == comment.id" @load-overlay-comment="toggleLoadOverlay"
+                :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
+                :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>
+
             <comment-component v-if="comment && comment['children']" :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute"
-                 @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
-                  @reply-to-comment="sendRepliedCommentId" :commentID="repliedCommentId"></comment-component>
-        </div>
+                @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
+                @reply-to-comment="sendRepliedCommentId" :commentID="repliedCommentId"></comment-component>
+
+        </ul> 
     </div>
 </template>
 
@@ -58,8 +67,21 @@
                 this.$emit('reply-to-comment', commentID);
             },
             replyTrigger() {
-                this.repliedCommentId = event.target.getAttribute('id').split("-").pop();
+                var replyTarget = event.target;
+                if(replyTarget.getAttribute('id') == null && replyTarget.classList.contains('glyphicon')) {
+                    replyTarget = replyTarget.parentElement;
+                }
+                this.repliedCommentId = replyTarget.getAttribute('id').split("-").pop();
                 this.$emit('reply-to-comment', this.repliedCommentId);
+                var options = {
+                    easing: 'ease-in',
+                    offset: -200,
+                    force: true,
+                    cancelable: true,
+                    x: false,
+                    y: true
+                };
+                VueScrollTo.scrollTo(replyTarget, 500, options);
             }
         }
     }
