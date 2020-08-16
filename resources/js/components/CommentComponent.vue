@@ -30,9 +30,11 @@
                             </a>
                         </div>
                         <!-- Reply form, which can be rendered for each comment -->
-                        <comment-form v-if="user && repliedCommentId == comment.id" @load-overlay-comment="toggleLoadOverlay"
-                        :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
-                        :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id"></comment-form>              
+                        <slide-up-down :active="user && repliedCommentId == comment.id" :duration="750">
+                            <comment-form  @load-overlay-comment="toggleLoadOverlay"
+                            :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
+                            :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id" :is-reply="true"></comment-form>
+                        </slide-up-down>              
                     </div>
             </li>  
 
