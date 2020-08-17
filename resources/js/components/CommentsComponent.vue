@@ -15,7 +15,7 @@
 
             <comment-component v-if="comments" :csrf="csrf" :comments="comments"
             @delete-comment="confirmCommentDeletion" :user="user" :save-comment-route="saveCommentRoute"
-            @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment">
+            @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment" :level="0">
             </comment-component>
         </slide-up-down>
     </div>

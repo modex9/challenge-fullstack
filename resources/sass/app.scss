@@ -113,3 +113,49 @@ div[id^="replay-form"], #root-comment-form {
         font-weight: bold;
     }
 }
+
+.media-list {
+    @media screen and (max-width: $small_devices) {
+        & .comment-container {
+            min-width: 245px;
+            position: relative;
+            &.rooted-child {
+                right: 25px;
+            }
+        }
+        & .media {
+            display: block;
+            & > a {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            & .comment-avatar {
+                max-width: 70px;
+                margin: auto;
+            }
+            & .media-body {
+                clear: both;
+                & [id^="replay-to"] + a {
+                    margin-top: 5px;
+                }
+            }
+            & .media-comment {
+                word-break: break-word;
+            }
+            & [id^="comment"] {
+                position: relative;
+                left: 20px;
+                bottom: 20px;
+            }
+        }
+    }
+    @media screen and (max-width: $very_small_devices) {
+        & .comment-container {
+            min-width: 190px;
+        }
+        & .media-body [id^="replay-to"] + a {
+            font-size: 11px;
+            padding: 6px 4px;
+        }    
+    }
+}

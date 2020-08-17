@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-container">
+    <div class="comment-container" :class="{ 'rooted-child' : level > 1}">
         <h4 v-if='!comments'>No comments at this moment.</h4>
         <ul  v-else v-for="comment in comments" v-bind:key='comment.id' class="media-list">
             <li v-if="comment" class="media">
@@ -40,11 +40,9 @@
 
             <!-- Next level child comments. -->
             <slide-up-down :active="comment && comment['children'] && Object.keys(comment['children']).length != 0 && showChildCommentIds.includes(comment.id)" :duration="1500">
-                <comment-component
-                :comments="comment['children']" 
-                :csrf="csrf" :save-comment-route="saveCommentRoute" :commentID="repliedCommentId"
+                <comment-component :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute" :commentID="repliedCommentId"
                 @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
-                @reply-to-comment="sendRepliedCommentId"></comment-component>
+                @reply-to-comment="sendRepliedCommentId" :level="level + 1"></comment-component>
             </slide-up-down>
 
         </ul> 
@@ -56,7 +54,7 @@
     export default {
         name : 'CommentComponent',
         components : { CommentForm }, 
-        props : ['comments', 'user', 'saveCommentRoute', 'csrf', 'commentID'],
+        props : ['comments', 'user', 'saveCommentRoute', 'csrf', 'commentID', 'level'],
         data : function() {
             return {
                 repliedCommentId : 0,
