@@ -30,8 +30,8 @@
                             </a>
                         </div>
                         <!-- Reply form, which can be rendered for each comment -->
-                        <slide-up-down :active="user && repliedCommentId == comment.id" :duration="750">
-                            <comment-form  @load-overlay-comment="toggleLoadOverlay"
+                        <slide-up-down :active="showReplyForm && user && repliedCommentId == comment.id" :duration="750">
+                            <comment-form  @load-overlay-comment="toggleLoadOverlay" @hide-reply-form="showReplyForm = false"
                             :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
                             :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id" :is-reply="true"></comment-form>
                         </slide-up-down>              
@@ -61,6 +61,7 @@
             return {
                 repliedCommentId : 0,
                 showChildCommentIds : [],
+                showReplyForm : true,
             }
         },
         watch : {
@@ -85,6 +86,7 @@
                 this.$emit('reply-to-comment', commentID);
             },
             replyTrigger() {
+                this.showReplyForm = true;
                 var replyTarget = event.target;
                 if(replyTarget.getAttribute('id') == null && replyTarget.classList.contains('glyphicon')) {
                     replyTarget = replyTarget.parentElement;
@@ -108,8 +110,9 @@
                 }
                 var toggleChildrenFor = parseInt(showChildrenTarget.getAttribute('id').split("-").pop());
                 var toggleChildrenForIndex = this.showChildCommentIds.indexOf(toggleChildrenFor);
-                if(toggleChildrenForIndex == -1)
+                if(toggleChildrenForIndex == -1) {
                     Vue.set(this.showChildCommentIds, this.showChildCommentIds.length, toggleChildrenFor);
+                }
                 else
                     Vue.delete(this.showChildCommentIds, toggleChildrenForIndex);
             }
