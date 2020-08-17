@@ -8,7 +8,7 @@
                     <label v-if="isReply" for="name" class="col-md-4 col-form-label">Write your reply</label>
                     <label v-else for="name" class="col-md-4 col-form-label">Add a new comment</label>
 
-                    <textarea v-model="content" :id="content + '-' + repliedCommentId" type="text" class="form-control" :class="{ 'is-invalid' : 'content' in errors}" name="content" value="" required autocomplete="name" autofocus></textarea>
+                    <textarea v-model="content" type="text" class="form-control" :class="{ 'is-invalid' : 'content' in errors}" name="content" value="" required autocomplete="name" autofocus></textarea>
                     <div v-if="errors && !errors['content']" class="is-invalid"></div>
                     <span v-for="error in errors" v-bind:key="error[0]" class="invalid-feedback" role="alert">
                         <strong>{{ error[0] }}</strong>
