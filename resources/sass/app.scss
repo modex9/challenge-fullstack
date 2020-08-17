@@ -102,3 +102,14 @@ div[id^="replay-form"], #root-comment-form {
         margin-top: 1px;
     }
 }
+
+.auth-inks {
+    margin-bottom: 20px;
+    & a {
+        margin: 0 10px;
+    }
+    & .btn {
+        padding: 6px 25px;
+        font-weight: bold;
+    }
+}

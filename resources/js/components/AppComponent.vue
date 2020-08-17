@@ -2,9 +2,9 @@
         <div class="container">
             <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="true" color="blue" loader='dots' background-color='#bfd5e4'></loading>
             <!-- Authentication Links -->
-            <div class="auth-inks" v-if="!user">
-                <a class="nav-link" href="#" @click="showLoginForm = true; showRegForm = false">Login</a>
-                <a class="nav-link" @click="showLoginForm = false; showRegForm = true" href="#">Register</a>
+            <div class="auth-inks text-center" v-if="!user">
+                <a class="btn btn-success" href="#" @click="showLoginForm = true; showRegForm = false">Login</a>
+                <a class="btn btn-info" @click="showLoginForm = false; showRegForm = true" href="#">Register</a>
             </div>
 
             <div class="user-logged" v-if="user">
