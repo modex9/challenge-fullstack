@@ -20,7 +20,6 @@
         </slide-up-down>
     </div>
 </template>
-:id="'comment-'comment.id"
 <script>
     import CommentForm from "./CommentForm";
     import CommentComponent from "./CommentComponent";

@@ -1,9 +1,9 @@
 <template>
-    <div class="container" id="register">
+    <div class="container" id="register-form">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card bg-gradient">
+                    <div class="card-header text-center">
                         Register
                          <button class="btn btn-black" @click="$emit('close-register')">
                             <span class="glyphicon glyphicon-remove"></span>

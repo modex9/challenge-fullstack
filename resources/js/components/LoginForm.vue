@@ -1,9 +1,9 @@
 <template>
-    <div class="container" id="login">
+    <div class="container" id="login-form">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card bg-gradient">
+                    <div class="card-header text-center">
                         Login
                         <button class="btn btn-black" @click="$emit('close-login')">
                             <span class="glyphicon glyphicon-remove"></span>
@@ -47,24 +47,19 @@
 
                             <div class="form-group row">
                                 <div class="col-md-6 offset-md-4">
-                                    <button name="github" @click="providerLogin" class="btn btn-secondary">Login with GitHub</button>
+                                    <button name="github" @click="providerLogin" class="btn btn-secondary social">Login with GitHub</button>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <div class="col-md-6 offset-md-4">
-                                    <button name="facebook" @click="providerLogin" class="btn btn-secondary">Login with Facebook</button>
+                                    <button name="facebook" @click="providerLogin" class="btn btn-secondary social">Login with Facebook</button>
                                 </div>
                             </div>
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary">Login</button>
-                                    <!-- @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                                            {{ __('Forgot Your Password?') }}
-                                        </a>
-                                    @endif -->
                                 </div>
                             </div>
                         </form>
