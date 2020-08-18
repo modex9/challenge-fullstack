@@ -11,6 +11,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -128,6 +129,7 @@ class LoginController extends Controller
             ], [
                 'name' => $provider_user->name ?? $provider_user->nickname,
                 'password' => Hash::make(Str::random(16)),
+                'avatar' => $provider_user->avatar ?? asset(User::DEFAULT_AVATAR),
             ]);
             Auth::login($user, true);
         }
