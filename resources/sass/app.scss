@@ -115,6 +115,23 @@ div[id^="replay-form"], #root-comment-form {
 }
 
 .media-list {
+    & label[for="name"] {
+        white-space: pre;
+        padding: 0;
+    }
+    & .media-comment {
+        word-break: break-word;
+    }
+    @media screen and (max-width: $extra-large-device) {
+        & .comment-container {
+            min-width: 65vw;
+            position: relative;
+            &.rooted-child {
+                right: 25px;
+            }
+        }
+    }
+
     @media screen and (max-width: $medium-devices) {
         & .comment-container {
             min-width: 55vw;
@@ -143,9 +160,6 @@ div[id^="replay-form"], #root-comment-form {
                 & [id^="replay-to"] + a {
                     margin-top: 5px;
                 }
-            }
-            & .media-comment {
-                word-break: break-word;
             }
             & [id^="comment"] {
                 position: relative;
