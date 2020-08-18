@@ -45,11 +45,11 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <div class="col-md-6 offset-md-4">
                                     <button name="github" @click="providerLogin" class="btn btn-secondary social">Login with GitHub</button>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group row">
                                 <div class="col-md-6 offset-md-4">
@@ -80,7 +80,7 @@
                 password : '',
                 remember : false,
                 errors : {},
-                loginProviders : ['github', 'facebook']
+                loginProviders : ['facebook']
             }
         },
         methods : {
