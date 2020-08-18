@@ -115,9 +115,14 @@ div[id^="replay-form"], #root-comment-form {
 }
 
 .media-list {
-    @media screen and (max-width: $small_devices) {
+    @media screen and (max-width: $medium-devices) {
         & .comment-container {
-            min-width: 245px;
+            min-width: 55vw;
+        }
+    }
+    @media screen and (max-width: $small-devices) {
+        & .comment-container {
+            min-width: 65vw;
             position: relative;
             &.rooted-child {
                 right: 25px;
@@ -149,9 +154,9 @@ div[id^="replay-form"], #root-comment-form {
             }
         }
     }
-    @media screen and (max-width: $very_small_devices) {
-        & .comment-container {
-            min-width: 190px;
+    @media screen and (max-width: $very-small-devices) {
+        & {
+            padding-left: 0;
         }
         & .media-body [id^="replay-to"] + a {
             font-size: 11px;
