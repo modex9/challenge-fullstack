@@ -32,7 +32,7 @@
                         <!-- Reply form, which can be rendered for each comment -->
                         <slide-up-down :active="showReplyForm && user && repliedCommentId == comment.id" :duration="750">
                             <comment-form  @load-overlay-comment="toggleLoadOverlay" @hide-reply-form="showReplyForm = false"
-                            :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user"
+                            :csrf="csrf" :save-comment-route="saveCommentRoute" @new-comment="addComment" :user="user" :headers="headers"
                             :replied-comment-id="repliedCommentId" :id="'replay-form-' + comment.id" :is-reply="true"></comment-form>
                         </slide-up-down>              
                     </div>
@@ -42,7 +42,7 @@
             <slide-up-down :active="comment && comment['children'] && Object.keys(comment['children']).length != 0 && showChildCommentIds.includes(comment.id)" :duration="1500">
                 <comment-component :comments="comment['children']" :csrf="csrf" :save-comment-route="saveCommentRoute" :commentID="repliedCommentId"
                 @delete-comment="deleteComment" :user="user" @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment"
-                @reply-to-comment="sendRepliedCommentId" :level="level + 1"></comment-component>
+                @reply-to-comment="sendRepliedCommentId" :level="level + 1" :headers="headers"></comment-component>
             </slide-up-down>
 
         </ul> 
@@ -54,7 +54,7 @@
     export default {
         name : 'CommentComponent',
         components : { CommentForm }, 
-        props : ['comments', 'user', 'saveCommentRoute', 'csrf', 'commentID', 'level'],
+        props : ['comments', 'user', 'saveCommentRoute', 'csrf', 'commentID', 'level', 'headers'],
         data : function() {
             return {
                 repliedCommentId : 0,

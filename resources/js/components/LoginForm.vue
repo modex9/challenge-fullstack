@@ -73,7 +73,7 @@
 <script>
     export default {
         name : 'LoginForm',
-        props : ['csrf', 'loginRoute'],
+        props : ['csrf', 'loginRoute', 'headers'],
         data : function () {
             return {
                 email : '',
@@ -96,10 +96,7 @@
                 fetch(this.loginRoute, {
                     method : 'POST',
                     body : JSON.stringify(data),
-                    headers : {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'X-CSRF-TOKEN' : this.csrf,
-                    },
+                    headers : this.headers,
                 })
                 .then(data => data.json())
                 .then(data => {

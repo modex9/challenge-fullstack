@@ -11,9 +11,9 @@
             <vue-confirm-dialog></vue-confirm-dialog>
 
             <comment-form v-if="user" @load-overlay-comment='toggleLoadOverlay' :csrf="csrf" :saveCommentRoute="saveCommentRoute"
-            @new-comment="addComment" :user="user" @show-login="$emit('show-login')" id="root-comment-form"></comment-form>
+            @new-comment="addComment" :user="user" @show-login="$emit('show-login')" id="root-comment-form" :headers="headers"></comment-form>
 
-            <comment-component v-if="comments" :csrf="csrf" :comments="comments"
+            <comment-component v-if="comments" :csrf="csrf" :comments="comments" :headers="headers"
             @delete-comment="confirmCommentDeletion" :user="user" :save-comment-route="saveCommentRoute"
             @load-overlay-comment="toggleLoadOverlay" @new-comment="addComment" :level="0">
             </comment-component>
@@ -28,7 +28,7 @@
         components : {
             CommentForm, CommentComponent
         },
-        props : ['getCommentsRoute', 'saveCommentRoute', 'user', 'csrf'],
+        props : ['getCommentsRoute', 'saveCommentRoute', 'user', 'csrf', 'headers'],
         data : function() {
             return {
                 comments : null,
@@ -45,10 +45,7 @@
                 let comments = {};
                 fetch(this.getCommentsRoute, {
                     method : 'GET',
-                    headers : {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'X-CSRF-TOKEN' : this.csrf,
-                    },
+                    headers : this.headers,
                 })
                 .then(data => data.json())
                 .then(data => {
@@ -95,10 +92,7 @@
                 this.toggleLoadOverlay(true);
                 fetch(this.saveCommentRoute + '/' + commentID, {
                     method : 'DELETE',
-                    headers : {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'X-CSRF-TOKEN' : this.csrf,
-                    },
+                    headers : this.headers,
                 })
                 .then(data => data.json())
                 .then(data => {

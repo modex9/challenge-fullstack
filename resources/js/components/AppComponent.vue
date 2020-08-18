@@ -16,13 +16,15 @@
             </div>
 
             <slide-up-down :active="showLoginForm" :duration="1000">
-                <login-form @close-login="showLoginForm = false" @toggle-load-overlay='toggleLoadOverlay' @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute"></login-form>
+                <login-form @close-login="showLoginForm = false" @toggle-load-overlay='toggleLoadOverlay' :headers="headers"
+                 @loggedin="setUser" @update-token="updateToken"  :csrf="csrf" :loginRoute="loginRoute"></login-form>
             </slide-up-down>
             <slide-up-down :active="showRegForm" :duration="1000">
-                <register-form @close-register="showRegForm = false" @toggle-load-overlay='toggleLoadOverlay' @registered="setUser" :csrf="csrf" :registerRoute="registerRoute"></register-form>
+                <register-form @close-register="showRegForm = false" @toggle-load-overlay='toggleLoadOverlay'
+                 @registered="setUser" :csrf="csrf" :registerRoute="registerRoute" :headers="headers"></register-form>
             </slide-up-down>
             <comments-component @toggle-load-overlay='toggleLoadOverlay' @show-login="showLoginForm = true; showRegForm = false"
-                 :user="user" :csrf="csrf" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
+                 :user="user" :headers="headers" :csrf="csrf" :get-comments-route="getCommentsRoute" :save-comment-route="saveCommentRoute"></comments-component>
         </div>
 </template>
 
@@ -44,10 +46,15 @@
                 showLoginForm : false,
                 user : !this.sessionUser ? null : JSON.parse(this.sessionUser),
                 isLoading : false,
+                headers : {
+                    "Content-Type": "application/json; charset=utf-8",
+                    'X-CSRF-TOKEN' : '',
+                    'X-Requested-With' : 'XMLHttpRequest',
+                }
             }
         },
         created() {
-            this.showLoginForm = false;
+            Vue.set(this.headers, 'X-CSRF-TOKEN', this.csrf);
         },
         computed : {
             welcomeMessage() {
@@ -59,17 +66,13 @@
                 this.isLoading = true;
                 fetch(this.logoutRoute, {
                     method : 'POST',
-                    headers : {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'X-CSRF-TOKEN' : this.csrf,
-                    },
+                    headers : this.headers,
                 })
                 .then(data => data.json())
                 .then(data => {
                     if(data['success']) {
                         this.user = null;
-                        this.csrf = data['csrf'];
-                        this.updateTokenDOM();
+                        this.updateToken(data['csrf']);
                     }
                 })
                 .catch(error => console.log(error))
@@ -81,6 +84,7 @@
             },
             updateToken(token) {
                 this.csrf = token;
+                Vue.set(this.headers, 'X-CSRF-TOKEN', this.csrf);
                 this.updateTokenDOM();
             },
             updateTokenDOM() {

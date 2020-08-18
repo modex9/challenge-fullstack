@@ -82,7 +82,7 @@
 <script>
     export default {
         name : 'RegisterForm',
-        props : ['csrf', 'registerRoute'],
+        props : ['csrf', 'registerRoute', 'headers'],
         data : function () {
             return  {
                 name : 'test',
@@ -106,10 +106,7 @@
                         password_confirmation : this.passwordConfirm,
                         avatar : this.avatar
                     }),
-                    headers : {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'X-CSRF-TOKEN' : this.csrf,
-                    },
+                    headers : this.headers,
                 })
                 .then(data => data.json())
                 .then(data => {

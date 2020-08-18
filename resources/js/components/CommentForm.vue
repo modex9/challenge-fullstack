@@ -29,7 +29,7 @@
 <script>
     export default {
         name : 'CommentForm',
-        props : ['saveCommentRoute', 'csrf', 'user', 'repliedCommentId', 'isReply'],
+        props : ['saveCommentRoute', 'csrf', 'user', 'repliedCommentId', 'isReply', 'headers'],
         data : function() {
             return {
                 content : '',
@@ -54,10 +54,7 @@
                 fetch(this.saveCommentRoute, {
                     method : 'POST',
                     body : JSON.stringify(data),
-                    headers : {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'X-CSRF-TOKEN' : this.csrf,
-                    },
+                    headers : this.headers,
                 })
                 .then(data => data.json())
                 .then(data => {
